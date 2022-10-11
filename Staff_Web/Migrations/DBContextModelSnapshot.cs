@@ -31,13 +31,16 @@ namespace Staff_Web.Migrations
 
                     b.Property<string>("FIO")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Position")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FIO")
+                        .IsUnique();
 
                     b.ToTable("Employees");
                 });

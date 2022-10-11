@@ -11,7 +11,7 @@ using Staff_Web.Data;
 namespace Staff_Web.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20221011120012_InitialCreate")]
+    [Migration("20221011122355_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,13 +33,16 @@ namespace Staff_Web.Migrations
 
                     b.Property<string>("FIO")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Position")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FIO")
+                        .IsUnique();
 
                     b.ToTable("Employees");
                 });

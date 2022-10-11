@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Core.Types;
 using Staff_Web.Data;
 using Staff_Web.Models;
+using System.Globalization;
 
 namespace Staff_Web.Controllers
 {
@@ -33,8 +30,7 @@ namespace Staff_Web.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employee
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var employee = await _context.Employee.FirstOrDefaultAsync(m => m.Id == id);
             if (employee == null)
             {
                 return NotFound();
@@ -51,7 +47,7 @@ namespace Staff_Web.Controllers
 
         // POST: Employees/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken] //anti-forgery filter
         public async Task<IActionResult> Create([Bind("Id,FIO,Position")] Employee employee)
         {
             if (ModelState.IsValid)
@@ -152,6 +148,14 @@ namespace Staff_Web.Controllers
         private bool EmployeeExists(int id)
         {
             return _context.Employee.Any(e => e.Id == id);
+        }
+
+        public JsonResult EmployeeFIOExists(string fio)
+        {
+            if (_context.Employee.Any(e => e.FIO == fio))
+                return Json(false);
+
+            return Json(true);
         }
     }
 }
