@@ -14,7 +14,6 @@ namespace Staff_Web.Models
         public int Id { get; set; }
 
         [Display(Name = "ФИО")]
-        [Remote("EmployeeFIOExists", "Employees", ErrorMessage = "Такое ФИО уже существует!")]
         public string FIO { get; set; } = "";
 
         [Display(Name = "Должность")]

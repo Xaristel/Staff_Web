@@ -50,12 +50,14 @@ namespace Staff_Web.Controllers
         [ValidateAntiForgeryToken] //anti-forgery filter
         public async Task<IActionResult> Create([Bind("Id,FIO,Position")] Employee employee)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && IsFIOUnique(employee))
             {
                 _context.Add(employee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.Message = "Такой сотрудник уже есть!";
             return View(employee);
         }
 
@@ -85,7 +87,7 @@ namespace Staff_Web.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && IsFIOUnique(employee))
             {
                 try
                 {
@@ -105,6 +107,8 @@ namespace Staff_Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.Message = "Такой сотрудник уже есть!";
             return View(employee);
         }
 
@@ -150,12 +154,13 @@ namespace Staff_Web.Controllers
             return _context.Employee.Any(e => e.Id == id);
         }
 
-        public JsonResult EmployeeFIOExists(string fio)
+        private bool IsFIOUnique(Employee employee)
         {
-            if (_context.Employee.Any(e => e.FIO == fio))
-                return Json(false);
-
-            return Json(true);
+            if (_context.Employee.Any(x => x.FIO == employee.FIO && x.Id != employee.Id))
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
